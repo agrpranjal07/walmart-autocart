@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  
+  /* Walmart Brand Colors */
+  --color-walmart-blue: #0071ce;
+  --color-walmart-dark-blue: #004c91;
+  --color-walmart-light-blue: #e1f5fe;
+  --color-walmart-yellow: #ffc220;
+  --color-walmart-orange: #ff6900;
+  --color-walmart-green: #00a652;
+  --color-walmart-dark-gray: #2d2d2d;
+  --color-walmart-medium-gray: #767676;
+  --color-walmart-light-gray: #f5f5f5;
+
+  /* Custom Border Radius */
+  --radius-walmart: 4px;
+
+  /* Custom Shadows */
+  --shadow-walmart: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-walmart-hover: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'BogleWeb', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  line-height: 1.6;
+}
+
+@layer components {
+  .btn-walmart-primary {
+    @apply bg-walmart-blue hover:bg-walmart-dark-blue text-white font-semibold py-3 px-6 rounded-walmart transition-colors duration-200 shadow-walmart hover:shadow-walmart-hover;
+  }
+  
+  .btn-walmart-secondary {
+    @apply bg-white border-2 border-walmart-blue text-walmart-blue hover:bg-walmart-light-blue font-semibold py-3 px-6 rounded-walmart transition-colors duration-200;
+  }
+  
+  .btn-walmart-yellow {
+    @apply bg-walmart-yellow hover:bg-yellow-400 text-walmart-dark-blue font-semibold py-3 px-6 rounded-walmart transition-colors duration-200;
+  }
+  
+  .card-walmart {
+    @apply bg-white rounded-walmart shadow-walmart border border-walmart-medium-gray;
+  }
+  
+  .input-walmart {
+    @apply border border-walmart-medium-gray rounded-walmart px-4 py-2 focus:outline-none focus:ring-2 focus:ring-walmart-blue focus:border-transparent;
+  }
+}
