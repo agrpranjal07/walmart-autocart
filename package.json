@@ -1,0 +1,21 @@
+{
+  "name": "walmart-ecommerce",
+  "version": "1.0.0",
+  "description": "Walmart-themed e-commerce platform with multi-service backend",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\" \"npm run dev:nlp\" \"npm run dev:search\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:nlp": "cd nlp-service && npm run dev",
+    "dev:search": "cd search-service && npm run dev",
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install && cd ../nlp-service && npm install && cd ../search-service && npm install",
+    "build": "cd frontend && npm run build"
+  },
+  "keywords": ["walmart", "ecommerce", "nextjs", "express", "microservices"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

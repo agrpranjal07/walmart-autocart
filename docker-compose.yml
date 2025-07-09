@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_BACKEND_URL=http://backend:4000
+      - NEXT_PUBLIC_NLP_SERVICE_URL=http://nlp-service:4001
+      - NEXT_PUBLIC_SEARCH_SERVICE_URL=http://search-service:4002
+    depends_on:
+      - backend
+      - nlp-service
+      - search-service
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: npm run dev
+
+  backend:
+    build: ./backend
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+      - NLP_SERVICE_URL=http://nlp-service:4001
+      - SEARCH_SERVICE_URL=http://search-service:4002
+      - NODE_ENV=development
+    depends_on:
+      - nlp-service
+      - search-service
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    command: npm run dev
+
+  nlp-service:
+    build: ./nlp-service
+    ports:
+      - "4001:4001"
+    environment:
+      - PORT=4001
+      - NODE_ENV=development
+    volumes:
+      - ./nlp-service:/app
+      - /app/node_modules
+    command: npm run dev
+
+  search-service:
+    build: ./search-service
+    ports:
+      - "4002:4002"
+    environment:
+      - PORT=4002
+      - NODE_ENV=development
+    volumes:
+      - ./search-service:/app
+      - /app/node_modules
+    command: npm run dev
