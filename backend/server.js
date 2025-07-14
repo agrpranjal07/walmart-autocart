@@ -14,18 +14,16 @@ const SEARCH_SERVICE_PORT = 4002;
 app.post('/api/process-products', async (req, res) => {
   try {
     const { products } = req.body;
+    const nlpInput = {
+      type: 'list',
+      content: products.map(product => {
+        return {"Product Name": product.name, Quantity: product.quantity};
+      })
+    };
+    const nlpResponse = await axios.post(`http://localhost:${NLP_SERVICE_PORT}/api/extract-products`, nlpInput);
     
-    // If products are already provided (manual entry), skip NLP and go straight to search
-    if (products && products.length > 0) {
-      const searchResponse = await axios.post(`http://localhost:${SEARCH_SERVICE_PORT}/api/search-products`, products);
-      res.status(200).json(searchResponse.data);
-      return;
-    }
-    
-    // If no products provided, this would be for text/image processing
-    const nlpResponse = await axios.post(`http://localhost:${NLP_SERVICE_PORT}/api/extract-products`, req.body);
     const searchResponse = await axios.post(`http://localhost:${SEARCH_SERVICE_PORT}/api/search-products`, nlpResponse.data);
-
+    console.log('Search Response:', searchResponse.data);
     res.status(200).json(searchResponse.data);
   } catch (error) {
     console.error('Error processing products:', error);

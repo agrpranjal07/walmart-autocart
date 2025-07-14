@@ -17,7 +17,7 @@ A full-stack e-commerce platform with AI-powered shopping assistance, built with
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   Frontend      │    │   Backend       │    │  NLP Service    │
-│  (Next.js 14)  │◄──►│  (Express.js)   │◄──►│    (Port 4001)  │
+│  (Next.js 14)   │◄──►│  (Express.js)   │◄──►│    (Port 4001)  │
 │   Port 3000     │    │   Port 4000     │    │                 │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
                               │
@@ -59,7 +59,7 @@ A full-stack e-commerce platform with AI-powered shopping assistance, built with
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd walmart-ecommerce
+   cd walmart-autocart
    ```
 
 2. **Install dependencies for all services**
@@ -219,7 +219,7 @@ The application uses Walmart's official branding:
 
 ### Project Structure
 ```
-walmart-ecommerce/
+walmart-autocart/
 ├── frontend/              # Next.js frontend
 │   ├── src/
 │   │   ├── app/           # App router pages

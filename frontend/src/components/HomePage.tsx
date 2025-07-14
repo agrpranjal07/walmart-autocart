@@ -18,44 +18,44 @@ export default function HomePage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const router = useRouter();
 
-  const processText = async () => {
-    if (!textInput.trim()) return;
+  // const processText = async () => {
+  //   if (!textInput.trim()) return;
     
-    setIsProcessing(true);
-    try {
-      const nlpUrl = process.env.NEXT_PUBLIC_NLP_SERVICE_URL || 'http://localhost:4001';
-      const response = await fetch(`${nlpUrl}/api/extract-products`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          type: 'text', 
-          data: textInput 
-        }),
-      });
+  //   setIsProcessing(true);
+  //   try {
+  //     const nlpUrl = process.env.NEXT_PUBLIC_NLP_SERVICE_URL || 'http://localhost:4001';
+  //     const response = await fetch(`${nlpUrl}/api/extract-products`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({ 
+  //         type: 'text', 
+  //         data: textInput 
+  //       }),
+  //     });
 
-      if (response.ok) {
-        const extractedProducts = await response.json();
-        setProducts(extractedProducts);
-        setTextInput('');
-      } else {
-        throw new Error('Failed to process text');
-      }
-    } catch (error) {
-      console.error('Error processing text:', error);
-      alert('Error processing text. Please try again.');
-    } finally {
-      setIsProcessing(false);
-    }
-  };
+  //     if (response.ok) {
+  //       const extractedProducts = await response.json();
+  //       setProducts(extractedProducts);
+  //       setTextInput('');
+  //     } else {
+  //       throw new Error('Failed to process text');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error processing text:', error);
+  //     alert('Error processing text. Please try again.');
+  //   } finally {
+  //     setIsProcessing(false);
+  //   }
+  // };
 
-  const handleFindProducts = () => {
-    if (textInput.trim()) {
-      processText();
-    }
-    // Add any other "Find Products" functionality here
-  };
+  // const handleFindProducts = () => {
+  //   if (textInput.trim()) {
+  //     processText();
+  //   }
+  //   // Add any other "Find Products" functionality here
+  // };
 
   const handleProductChange = (index: number, field: 'name' | 'quantity' | 'details', value: string | number) => {
     const updatedProducts = [...products];

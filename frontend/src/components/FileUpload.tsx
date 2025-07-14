@@ -30,7 +30,7 @@ export default function FileUpload({ onProductsExtracted, textInput, setTextInpu
         },
         body: JSON.stringify({ 
           type: 'image', 
-          data: base64 
+          content: base64 
         }),
       });
 
@@ -108,7 +108,7 @@ export default function FileUpload({ onProductsExtracted, textInput, setTextInpu
     if (videoRef.current && canvasRef.current) {
       const canvas = canvasRef.current;
       const video = videoRef.current;
-      
+      console.log('Capturing photo from video stream');
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
       
@@ -129,6 +129,7 @@ export default function FileUpload({ onProductsExtracted, textInput, setTextInpu
   const stopCamera = () => {
     if (videoRef.current?.srcObject) {
       const stream = videoRef.current.srcObject as MediaStream;
+      console.log('Stopping camera stream');
       stream.getTracks().forEach(track => track.stop());
       videoRef.current.srcObject = null;
     }
