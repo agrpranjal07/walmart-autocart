@@ -1,22 +1,6 @@
 [
   {
-    "name": "Maggi 2 Packet",
-    "query": "Maggi 2 Packet"
-  },
-  {
-    "name": "Peanut Butter Creamy",
-    "query": "Peanut Butter Creamy"
-  },
-  {
-    "name": "kg all-purpose flour",
-    "query": "1 kg all-purpose flour"
-  },
-  {
-    "name": "Toothpaste",
-    "query": "Toothpaste"
-  },
-  {
-    "name": "Garam Masala",
-    "query": "Garam Masala"
+    "name": "milk",
+    "query": "milk"
   }
 ]

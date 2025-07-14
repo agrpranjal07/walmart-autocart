@@ -9,7 +9,7 @@ import Header from './Header';
 export interface Product {
   name: string;
   quantity: number;
-  details: string; // Add this new field
+  details?: string; // Add this new field
 }
 
 export default function HomePage() {
@@ -31,9 +31,13 @@ export default function HomePage() {
   };
 
   const removeProduct = (index: number) => {
-    if (products.length > 1) {
-      setProducts(products.filter((_, i) => i !== index));
-    }
+    // if (products.length > 1) {
+    //   setProducts(products.filter((_, i) => i !== index));
+    // }
+    // if (products.length === 1) return; // ❌ This is preventing last item removal
+  const newProducts = [...products];
+  newProducts.splice(index, 1);
+  setProducts(newProducts);
   };
 
   const handleSubmit = async () => {
@@ -84,11 +88,11 @@ export default function HomePage() {
           {/* Enhanced Header Section */}
           <div className="text-center space-y-4 mb-12">
             <h1 className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r 
-              from-walmart-blue via-blue-600 to-walmart-blue mb-2 tracking-tight">
+              from-walmart-blue-400 via-blue-600 to-walmart-blue mb-2 tracking-tight">
               Autocart Assistant
             </h1>
             <p className="text-gray-600 text-lg max-w-2xl mx-auto leading-relaxed">
-              Got a list? Type or snap it — we’ll find you the best prices!
+              Got a list? Type or snap it — we’ll find you the best products!
             </p>
             <div className="h-1 w-32 bg-gradient-to-r from-transparent via-walmart-yellow to-transparent mx-auto"></div>
           </div>
@@ -118,7 +122,7 @@ export default function HomePage() {
                 <div className="w-12 h-12 bg-gradient-to-br from-walmart-blue to-blue-600 rounded-full 
                   flex items-center justify-center text-white font-bold shadow-md 
                   transform transition hover:scale-110 hover:rotate-3">
-                  2
+                  3
                 </div>
                 <h2 className="text-2xl font-semibold text-walmart-blue">
                   Manual Entry
@@ -130,11 +134,36 @@ export default function HomePage() {
                 onAddProduct={addProduct}
                 onRemoveProduct={removeProduct}
               />
+              <div className="mt-12 text-center">
+            <button
+              onClick={handleSubmit}
+              disabled={isProcessing}
+              className="group bg-gradient-to-r cursor-pointer from-walmart-blue to-blue-600 text-white font-bold text-lg 
+                px-12 py-4 rounded-xl shadow-lg transform transition-all duration-300 
+                hover:-translate-y-1 hover:shadow-xl hover:from-blue-600 hover:to-walmart-blue
+                disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:hover:shadow-lg"
+            >
+              {isProcessing ? (
+                <div className="flex items-center justify-center space-x-3">
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <span>Processing...</span>
+                </div>
+              ) : (
+                <span className="flex items-center justify-center space-x-2">
+                  <span>Find Products</span>
+                  <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" 
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </span>
+              )}
+            </button>
+          </div>
             </div>
           </div>
           
           {/* Enhanced Button Section */}
-          <div className="mt-12 text-center">
+          {/* <div className="mt-12 text-center">
             <button
               onClick={handleSubmit}
               disabled={isProcessing}
@@ -158,7 +187,7 @@ export default function HomePage() {
                 </span>
               )}
             </button>
-          </div>
+          </div> */}
         </div>
       </main>
     </div>
