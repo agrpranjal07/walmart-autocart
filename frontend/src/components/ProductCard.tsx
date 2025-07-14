@@ -7,9 +7,16 @@ interface ProductCardProps {
   isSelected: boolean;
   onSelect: () => void;
   onAddToCart: () => void;
+  size?: 'small' | 'medium' | 'large';
 }
 
-export default function ProductCard({ product, isSelected, onSelect, onAddToCart }: ProductCardProps) {
+export default function ProductCard({ product, isSelected, onSelect, onAddToCart, size = 'medium' }: ProductCardProps) {
+  const imageSize = {
+    small: 'h-32',
+    medium: 'h-48',
+    large: 'h-64'
+  }[size];
+
   return (
     <div 
       className={`border rounded-lg p-4 cursor-pointer transition-all ${
@@ -19,11 +26,11 @@ export default function ProductCard({ product, isSelected, onSelect, onAddToCart
       }`}
       onClick={onSelect}
     >
-      <div className="aspect-square mb-3 bg-gray-100 rounded-lg overflow-hidden">
+      <div className={`relative ${imageSize} bg-gray-100`}>
         <img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-contain p-2"
           onError={(e) => {
             const target = e.target as HTMLImageElement;
             target.src = 'https://via.placeholder.com/200x200/E5E5E5/666666?text=No+Image';
@@ -31,14 +38,14 @@ export default function ProductCard({ product, isSelected, onSelect, onAddToCart
         />
       </div>
       
-      <h3 className="font-semibold text-sm text-walmart-darkBlue mb-2 line-clamp-2">
+      <h3 className="font-semibold text-sm text-walmart-darkBlue mb-2">
         {product.name}
       </h3>
       
       <div className="flex items-center justify-between mb-3">
-        <span className="text-lg font-bold text-walmart-blue">
-          ${product.price.toFixed(2)}
-        </span>
+        <div className="text-lg font-bold text-walmart-darkBlue">
+          ${(product.price.price / 100).toFixed(2)}
+        </div>
         
         {product.rating && (
           <div className="flex items-center text-yellow-500">

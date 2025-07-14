@@ -4,7 +4,7 @@ import { Product } from './HomePage';
 
 interface ProductTableProps {
   products: Product[];
-  onProductChange: (index: number, field: 'name' | 'quantity', value: string | number) => void;
+  onProductChange: (index: number, field: 'name' | 'quantity' | 'details', value: string | number) => void;
   onAddProduct: () => void;
   onRemoveProduct: (index: number) => void;
 }
@@ -17,12 +17,13 @@ export default function ProductTable({
 }: ProductTableProps) {
   return (
     <div className="space-y-6">
-      <div className="card-walmart overflow-hidden">
+      <div className="card-walmart rounded-3xl overflow-hidden">
         <table className="w-full">
           <thead className="bg-walmart-lightBlue">
             <tr>
               <th className="text-left p-4 font-semibold text-walmart-darkBlue">Product Name</th>
               <th className="text-left p-4 font-semibold text-walmart-darkBlue w-24">Qty</th>
+              <th className="text-left p-4 font-semibold text-walmart-darkBlue">Details</th>
               <th className="text-left p-4 font-semibold text-walmart-darkBlue w-20">Action</th>
             </tr>
           </thead>
@@ -34,7 +35,7 @@ export default function ProductTable({
                     type="text"
                     value={product.name}
                     onChange={(e) => onProductChange(index, 'name', e.target.value)}
-                    placeholder="Enter product name (e.g., milk, bread, toothpaste)"
+                    placeholder="Enter product name"
                     className="input-walmart w-full"
                   />
                 </td>
@@ -44,6 +45,15 @@ export default function ProductTable({
                     value={product.quantity}
                     onChange={(e) => onProductChange(index, 'quantity', parseInt(e.target.value) || 1)}
                     min="1"
+                    className="input-walmart w-full"
+                  />
+                </td>
+                <td className="p-4">
+                  <input
+                    type="text"
+                    value={product.details || ''}
+                    onChange={(e) => onProductChange(index, 'details', e.target.value)}
+                    placeholder="Add specifications, brand, size, etc."
                     className="input-walmart w-full"
                   />
                 </td>
@@ -67,7 +77,7 @@ export default function ProductTable({
       
       <button
         onClick={onAddProduct}
-        className="btn-walmart-secondary w-full flex items-center justify-center space-x-2"
+        className="btn-walmart-secondary cursor-pointer w-full flex items-center justify-center space-x-2"
       >
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
