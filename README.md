@@ -44,7 +44,7 @@ A full-stack e-commerce platform with AI-powered shopping assistance, built with
 - **Dotenv** for environment variables
 
 ### Services
-- **NLP Service**: Natural language processing for product extraction
+- **IP Service**: Image processing for product extraction
 - **Search Service**: Product search and matching with mock Walmart data
 - **Natural** library for text processing
 
@@ -161,6 +161,33 @@ or
 - Eggs (12 count)
 - Toothpaste
 ```
+or
+
+### 🔽 Input: Handwritten Image
+
+![Shopping List Image](./shopping_list.jpg)
+
+User uploads this photo of a handwritten list containing:
+
+1. Maggi 2 Packet  
+2. Peanut Butter Creamy  
+3. 1kg Maida  
+4. Toothpaste  
+5. Garam Masala
+
+---
+
+### 🪄 NLP Service Converts This To:
+
+```json
+[
+  { "name": "Maggi", "query": "2 Packet Maggi" },
+  { "name": "Peanut", "query": "Peanut Butter Creamy" },
+  { "name": "Maida", "query": "1kg Maida" },
+  { "name": "Toothpaste", "query": "Toothpaste" },
+  { "name": "Garam", "query": "Garam Masala" }
+]
+  ```
 
 ## 🔧 Configuration
 
