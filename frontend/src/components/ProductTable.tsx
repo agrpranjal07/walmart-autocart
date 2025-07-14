@@ -28,7 +28,7 @@ export default function ProductTable({
             </tr>
           </thead>
           <tbody>
-            {products.map((product, index) => (
+            {products.length > 0 ? (products.map((product, index) => (
               <tr key={index} className="border-t border-walmart-mediumGray hover:bg-walmart-lightGray transition-colors">
                 <td className="p-4">
                   <input
@@ -60,8 +60,8 @@ export default function ProductTable({
                 <td className="p-4">
                   <button
                     onClick={() => onRemoveProduct(index)}
-                    disabled={products.length === 1}
-                    className="text-red-500 hover:text-red-700 disabled:opacity-50 disabled:cursor-not-allowed p-1 rounded transition-colors"
+                    // disabled={false}
+                    className="text-red-500 cursor-pointer  hover:text-red-700 disabled:opacity-50 disabled:cursor-not-allowed p-1 rounded transition-colors"
                     title="Remove product"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -70,7 +70,13 @@ export default function ProductTable({
                   </button>
                 </td>
               </tr>
-            ))}
+            ))) : (
+                <tr>
+      <td colSpan={4} className="p-4 text-center text-walmart-darkBlue">
+        No products. Click “Add Another Product” to start.
+      </td>
+    </tr>
+            )}
           </tbody>
         </table>
       </div>

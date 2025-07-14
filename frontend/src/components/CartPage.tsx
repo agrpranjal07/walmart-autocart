@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Header from './Header';
+import Cart from './Cart';
 import { CartItem } from './ResultsPage';
 
 export default function CartPage() {

@@ -11,11 +11,12 @@ interface FileUploadProps {
 
 export default function FileUpload({  textInput, setTextInput }: FileUploadProps) {
   const [isProcessing, setIsProcessing] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
   const router = useRouter();
 
     const processText = async () => {
@@ -133,7 +134,7 @@ export default function FileUpload({  textInput, setTextInput }: FileUploadProps
       
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
-        videoRef.current.play(); // Explicitly call play
+        await videoRef.current.play(); // Explicitly call play
       }
       setIsCameraOpen(true);
     } catch (error) {
@@ -261,7 +262,7 @@ export default function FileUpload({  textInput, setTextInput }: FileUploadProps
       </div>
 
       {/* Camera Section */}
-      <div className="card-walmart rounded-4xl p-6">
+      {/* <div className="card-walmart rounded-4xl p-6">
         <div className="flex items-center justify-center space-x-2 mb-4">
           <svg className="w-5 h-5 text-walmart-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89L8.91 4.89A2 2 0 0110.574 4h2.852a2 2 0 011.664.89L15.91 6.11a2 2 0 001.664.89H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
@@ -304,9 +305,72 @@ export default function FileUpload({  textInput, setTextInput }: FileUploadProps
             </div>
           </div>
         )}
+        
+      </div> */}
+
+      <div className="card-walmart rounded-4xl p-6">
+  <div className="flex items-center justify-center space-x-2 mb-4">
+    <svg className="w-5 h-5 text-walmart-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89L8.91 4.89A2 2 0 0110.574 4h2.852a2 2 0 011.664.89L15.91 6.11a2 2 0 001.664.89H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+    <h3 className="font-semibold text-walmart-darkBlue">Camera Capture</h3>
+  </div>
+
+  {!isCameraOpen ? (
+    <button
+      onClick={startCamera}
+      className="btn-walmart-secondary w-full py-3 rounded-xl cursor-pointer justify-center flex items-center gap-2"
+    >
+      <span>📸</span> Open Camera
+    </button>
+  ) : (
+    <div className="space-y-4">
+      {/* Video Preview Box */}
+      <div className="relative w-full max-w-2xl mx-auto rounded-xl overflow-hidden border-2 border-walmart-blue shadow-md">
+        <video
+          ref={videoRef}
+          autoPlay
+          playsInline
+          muted
+          className="w-full h-[300px] object-cover bg-black rounded-xl"
+        />
+        <canvas ref={canvasRef} className="hidden" />
       </div>
 
+      {/* Action Buttons */}
+      <div className="flex justify-center gap-4">
+        <button
+          onClick={capturePhoto}
+          className="btn-walmart-primary py-2 px-6 rounded-lg flex items-center gap-2"
+        >
+          <span>📸</span> Capture Photo
+        </button>
+        <button
+          onClick={stopCamera}
+          className="btn-walmart-secondary py-2 px-6 rounded-lg flex items-center gap-2"
+        >
+          <span>✕</span> Close Camera
+        </button>
+      </div>
+    </div>
+  )}
+</div>
+
+
+      
+
       {/* Text Input */}
+      <div className="flex justify-center items-center space-x-4 mb-6">
+                <div className="w-12 h-12 bg-gradient-to-br from-walmart-blue to-blue-600 rounded-full 
+                  flex items-center justify-center text-white font-bold shadow-md 
+                  transform transition hover:scale-110 hover:rotate-3">
+                  2
+                </div>
+                <h2 className="text-2xl font-semibold text-walmart-blue">
+                  Text Input
+                </h2>
+              </div>
       <div className="card-walmart rounded-4xl p-6">
         <div className="flex items-center space-x-2 mb-4">
           <svg className="w-5 h-5 text-walmart-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -323,7 +387,7 @@ export default function FileUpload({  textInput, setTextInput }: FileUploadProps
         <button
           onClick={processText}
           disabled={isProcessing || !textInput.trim()}
-          className="btn-walmart-primary mt-4 w-full py-3 rounded-xl flex items-center justify-center gap-2"
+          className="btn-walmart-primary cursor-pointer mt-4 w-full py-3 rounded-xl flex items-center justify-center gap-2"
         >Submit
         </button>
       </div>

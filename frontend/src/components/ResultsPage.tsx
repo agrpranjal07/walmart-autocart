@@ -345,13 +345,16 @@ export default function ResultsPage() {
                                             <div className="flex items-center">
                                               <span className="text-yellow-400 text-xs">★</span>
                                               <span className="text-xs ml-1">
-                                                {product.rating || 'N/A'}
+                                                {product.rating || 'no rating'}
                                               </span>
-                                              {product.reviews && (
+                                              {/* {product.reviews && (
                                                 <span className="text-xs text-gray-500 ml-1">
                                                   ({product.reviews})
                                                 </span>
-                                              )}
+                                              )} */}
+                                              <span className="text-xs ml-1">
+                                                {product.reviews ? `(${product.reviews})` : " "}
+                                              </span>
                                             </div>
                                           </td>
                                           <td className="px-3 py-2">

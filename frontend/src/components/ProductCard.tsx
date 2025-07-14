@@ -17,6 +17,7 @@ export default function ProductCard({ product, isSelected, onSelect, onAddToCart
     large: 'h-64'
   }[size];
 
+
   return (
     <div 
       className={`border rounded-lg p-4 cursor-pointer transition-all ${
@@ -52,6 +53,7 @@ export default function ProductCard({ product, isSelected, onSelect, onAddToCart
             <span className="text-sm">★</span>
             <span className="text-xs ml-1">
               {product.rating.toFixed(1)}
+
             </span>
             {product.reviews && (
               <span className="text-xs text-gray-500 ml-1">
