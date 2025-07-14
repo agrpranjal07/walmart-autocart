@@ -8,9 +8,10 @@ import google.generativeai as genai
 from PIL import Image
 import os
 from dotenv import load_dotenv
+import base64
+from io import BytesIO
 
 load_dotenv()
-
 
 # SETUP GEMINI
 genai.configure(api_key=os.environ.get("GOOGLE_API_KEY"))
@@ -20,14 +21,17 @@ model_vision = genai.GenerativeModel("gemini-2.0-flash-lite")
 # ==== FastAPI Setup ====
 app = FastAPI()
 
+
 class InputPayload(BaseModel):
     type: Literal["image", "text", "list"]
     content: Union[str, list]
+
 
 # === JSON Save Utility ===
 def save_json(data, filename="output.json"):
     with open(filename, "w") as f:
         json.dump(data, f, indent=2)
+
 
 # === Format conversion ===
 def convert_to_final_format(items):
@@ -35,17 +39,43 @@ def convert_to_final_format(items):
     for line in items:
         if not line.strip():
             continue
-        name = line.split()[0]
+
         query = line.strip()
+
+        # Extract product name: take last 2 or 3 words
+        words = query.split()
+        if len(words) >= 3:
+            name = " ".join(words[-3:])
+        elif len(words) == 2:
+            name = " ".join(words[-3:])
+        else:
+            name = words[0]
+
         result.append({"name": name, "query": query})
     return result
 
 # === Handlers ===
-def handle_image_input(content):
-    image = Image.open(image)
+def handle_image_input(image_b64):
+    if image_b64.startswith("data:image"):
+        image_b64 = image_b64.split(",")[1]
 
+    try:
+        image_data = base64.b64decode(image_b64)
+        image = Image.open(BytesIO(image_data))
+        image = image.convert("RGB")  # Ensure it's a valid image mode
+    except Exception as e:
+        print(f"Image decode error: {e}")
+        return {"flag": "bad_image"}
     prompt = """
-You are an AI assistant.
+You're an AI assistant. Read the image of a shopping list and convert the items to plain English equivalents.
+For example:
+- Convert `maida` to `all-purpose flour`
+- Convert `haldi` to `turmeric`
+Return the cleaned list as plain lines:
+e.g.
+2L Amul milk
+1kg all-purpose flour
+and
 Read the image of a shopping list and return the list items as plain lines (no JSON formatting).
 If the image is too blurry or can't be interpreted properly, respond exactly with:
 { "flag": "bad_image" }
@@ -63,6 +93,7 @@ some chocolates for kids
 
     lines = raw.splitlines()
     return convert_to_final_format(lines)
+
 
 def handle_text_input(text):
     prompt = f"""
@@ -99,6 +130,7 @@ List:
     except:
         return {"error": "Failed to parse Gemini response", "raw": content}
 
+
 def handle_list_input(json_str):
     # try:
     #     items = json.loads(json_str)
@@ -116,7 +148,7 @@ def handle_list_input(json_str):
 You are an AI assistant. Your job is to convert a list of products into a structured format.
 For each item, return a JSON object with:
 - "name": product name
-- "query": full detailed search query (quantity, brand, context)
+- "query": full detailed search query (quantity, brand, context) based on walmart's search requirements.
 Only return the JSON array. Example:
 [
   {{
@@ -148,9 +180,10 @@ List:
         return json.loads(content)
     except:
         return {"error": "Failed to parse Gemini response", "raw": content}
-    
 
     # === Route ===
+
+
 @app.post("/api/extract-products")
 async def process_input(payload: InputPayload):
     input_type = payload.type
@@ -178,6 +211,7 @@ async def process_input(payload: InputPayload):
     save_json(result)
     print(f"nlp-service: Processed input and saved to output.json, {result}")
     return JSONResponse(content=result)
+
 
 # === Start the server ===
 if __name__ == "__main__":

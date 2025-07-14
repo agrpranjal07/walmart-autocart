@@ -13,13 +13,28 @@ const SEARCH_SERVICE_PORT = 4002;
 
 app.post('/api/process-products', async (req, res) => {
   try {
-    const { products } = req.body;
-    const nlpInput = {
+    const { type, content } = req.body;
+    let nlpInput;
+    if(type =='list') {
+     nlpInput = {
       type: 'list',
-      content: products.map(product => {
-        return {"Product Name": product.name, Quantity: product.quantity};
+      content: content.map(product => {
+        return {"Product Name": product.name, Quantity: product.quantity, Details: product.details || ''};
       })
     };
+  } else if(type == 'image') {
+    nlpInput = {
+      type: 'image',
+      content: content // Assuming content is base64 encoded image
+    };
+  } else if(type == 'text') {
+    nlpInput = {
+      type: 'text',
+      content: content // Assuming content is a string of text
+    };
+  } else {
+    return res.status(400).send('Invalid input type');
+  }
     const nlpResponse = await axios.post(`http://localhost:${NLP_SERVICE_PORT}/api/extract-products`, nlpInput);
     
     const searchResponse = await axios.post(`http://localhost:${SEARCH_SERVICE_PORT}/api/search-products`, nlpResponse.data);

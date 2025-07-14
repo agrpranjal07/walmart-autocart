@@ -43,7 +43,7 @@ export default function CartPage() {
   };
 
   const getSubtotal = () => {
-    return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    return cart.reduce((total, item) => total + (item.price.price * item.quantity), 0);
   };
 
   const getTotal = () => {
@@ -137,7 +137,7 @@ export default function CartPage() {
                         {item.name}
                       </h3>
                       <p className="text-walmart-blue font-semibold text-xl">
-                        ${item.price.toFixed(2)}
+                        ${item.price.price.toFixed(2)}
                       </p>
                       {item.rating && (
                         <div className="flex items-center mt-1">

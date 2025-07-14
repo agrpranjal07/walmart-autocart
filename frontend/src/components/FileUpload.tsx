@@ -2,28 +2,65 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Product } from './HomePage';
+import { useRouter } from 'next/navigation';
 
 interface FileUploadProps {
-  onProductsExtracted: (products: Product[]) => void;
   textInput: string;
   setTextInput: (text: string) => void;
 }
 
-export default function FileUpload({ onProductsExtracted, textInput, setTextInput }: FileUploadProps) {
+export default function FileUpload({  textInput, setTextInput }: FileUploadProps) {
   const [isProcessing, setIsProcessing] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const router = useRouter();
+
+    const processText = async () => {
+    if (!textInput.trim()) return;
+    
+    setIsProcessing(true);
+    try {
+      const nlpUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000';
+      const response = await fetch(`${nlpUrl}/api/process-products`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          type: 'text', 
+          content: textInput 
+        }),
+      });
+
+      if (response.ok) {
+        const results = await response.json();
+        // Store results in localStorage for the results page
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('searchResults', JSON.stringify(results));
+        }
+        router.push('/results');
+      } else {
+        throw new Error('Failed to process text');
+      }
+    } catch (error) {
+      console.error('Error processing text:', error);
+      alert('Error processing text. Please try again.');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
 
   const processFile = async (file: File) => {
     setIsProcessing(true);
     try {
       const base64 = await fileToBase64(file);
-      const nlpUrl = process.env.NEXT_PUBLIC_NLP_SERVICE_URL || 'http://localhost:4001';
-      const response = await fetch(`${nlpUrl}/api/extract-products`, {
+      console.log('Processing file:', file.name);
+      console.log('Base64 content:', base64.slice(0, 50) + '...'); // Log first 50 chars for brevity
+      const nlpUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000';
+      const response = await fetch(`${nlpUrl}/api/process-products`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -35,12 +72,13 @@ export default function FileUpload({ onProductsExtracted, textInput, setTextInpu
       });
 
       if (response.ok) {
-        const extractedProducts = await response.json();
-        onProductsExtracted(extractedProducts);
-        // Clear preview after successful processing
-        setPreview(null);
-        setSelectedFile(null);
-      } else {
+        const results = await response.json();
+        // Store results in localStorage for the results page
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('searchResults', JSON.stringify(results));
+        }
+        router.push('/results');
+      }else {
         throw new Error('Failed to process image');
       }
     } catch (error) {
@@ -62,7 +100,7 @@ export default function FileUpload({ onProductsExtracted, textInput, setTextInpu
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: {
-      'image/*': ['.png', '.jpg', '.jpeg', '.gif']
+      'image/*': ['.png', '.jpg', '.jpeg']
     },
     onDrop: (acceptedFiles) => {
       if (acceptedFiles.length > 0) {
@@ -282,6 +320,12 @@ export default function FileUpload({ onProductsExtracted, textInput, setTextInpu
           placeholder="Enter your shopping list or product descriptions...\n\nExample:\n- 2 gallons of milk\n- 1 loaf of bread\n- toothpaste\n- bananas"
           className="input-walmart rounded-2xl w-full h-32 resize-none"
         />
+        <button
+          onClick={processText}
+          disabled={isProcessing || !textInput.trim()}
+          className="btn-walmart-primary mt-4 w-full py-3 rounded-xl flex items-center justify-center gap-2"
+        >Submit
+        </button>
       </div>
 
       {isProcessing && (
